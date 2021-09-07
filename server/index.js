@@ -8,7 +8,7 @@ const app = express()
 
 app.use(express.json())
 app.use(cors())
-app.use('/api/posts', require('./routes/posts.routes'))
+app.use('/api/post', require('./routes/posts.routes'))
 
 async function start() {
   try {

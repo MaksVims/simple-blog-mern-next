@@ -4,9 +4,11 @@ import BtnBack from "../../components/BtnBack";
 import styled from "styled-components";
 import Image from "next/image";
 import {StyleButton} from "../../components/AppButton";
+import PostService from "../../API/PostService";
+import {useRouter} from "next/router";
 
 const SinglePost = styled.article`
-  margin: 135px auto 0;
+  margin: 135px auto 50px;
   padding: 35px;
   padding-bottom: 56px;
   background: ${props => props.theme.colors.white};
@@ -42,39 +44,52 @@ const RemoveBtn = styled(StyleButton)`
   background: ${props => props.theme.colors.secondary};
 `
 
-const Post = () => {
+const Post = ({post}) => {
+  const router = useRouter()
+
+  const removePost = async (post) => {
+    await PostService.removePost(post._id)
+    await router.push('/')
+  }
+
   return (
-    <MainContainer title="Страница поста">
+    <MainContainer title={post.title}>
       <Link href={'/'}>
         <BtnBack>Назад</BtnBack>
       </Link>
       <SinglePost>
         <PostContent>
-          <PostTitle>Альпы. Покори вершину с нами !</PostTitle>
-          <PostText>А́льпы (фр. Alpes, нем. Alpen, итал. Alpi, романш. Alps, словен. Alpe) — самый высокий и
-            протяжённый горный хребет среди систем, целиком лежащих в Европе. При этом Кавказские горы выше, а
-            Уральские — протяжённей, но они лежат также и на территории Азии (в зависимости от выбранного определения
-            границы между Европой и Азией).
-
-            Альпы представляют собой сложную систему хребтов и массивов, протянувшуюся выпуклой к северо-западу дугой
-            от Лигурийского моря до Среднедунайской низменности. Альпы располагаются на территории 8 стран: Франции,
-            Монако, Италии, Швейцарии, Германии, Австрии, Лихтенштейна и Словении. Общая длина альпийской дуги
-            составляет около 1200 км (по внутреннему краю дуги — около 750 км), ширина — до 260 км. Самой высокой
-            вершиной Альп является гора Монблан высотой 4810 метров над уровнем моря, расположенная на границе Франции
-            и Италии[1]. Всего в Альпах сосредоточено около 100 вершин-четырёхтысячников[2].</PostText>
+          <PostTitle>{post.title}</PostTitle>
+          <PostText>{post.text}</PostText>
         </PostContent>
         <ImageWrapper>
           <Image
-            src="/static/post_1.png"
-            alt="Picture of the author"
+            src={post.imgUrl}
+            alt={post.title}
             width={540}
             height={340}
           />
         </ImageWrapper>
-        <RemoveBtn>Удалить статью</RemoveBtn>
+        <RemoveBtn onClick={() => removePost(post)}>Удалить статью</RemoveBtn>
       </SinglePost>
     </MainContainer>
   );
 };
+
+export async function getServerSideProps({query}) {
+  const post = await PostService.getPostById(query.id)
+
+  if (!post) {
+    return {
+      notFound: true,
+    }
+  }
+
+  return {
+    props: {
+      post
+    }
+  }
+}
 
 export default Post;

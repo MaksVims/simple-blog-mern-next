@@ -14,7 +14,7 @@ class PostController {
 
   async getPostById(req, res) {
     try {
-      const { id } = req.params
+      const {id} = req.params
       const post = await PostService.getPostById(id)
       res.json(post)
     } catch (e) {
@@ -33,7 +33,7 @@ class PostController {
 
   async removePost(req, res) {
     try {
-      const { postId } = req.body
+      const {postId} = req.body
       await PostService.removePostById(postId)
       res.json({message: 'Success'})
     } catch (e) {
