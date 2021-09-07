@@ -1,12 +1,17 @@
 html,
 body {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-  Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  color: #000;
+  line-height: 21px;
+  font-size: 18px;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 button, input, textarea {
@@ -18,4 +23,17 @@ button, input, textarea {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+.container {
+  max-width: 1110px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  position: relative;
+  border: 1px solid transparent;
+}
+
+textarea, input {
+  font-family: 'Roboto', sans-serif;
 }
