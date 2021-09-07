@@ -4,6 +4,9 @@ import styled from "styled-components";
 import Link from "next/link";
 import AppInput from "../components/AppInput";
 import AppButton from "../components/AppButton";
+import {useState} from "react";
+import PostService from "../API/PostService";
+import {useRouter} from "next/router";
 
 const FormWrapper = styled.section`
   margin-top: 200px;
@@ -46,6 +49,15 @@ const FormTextArea = styled.textarea`
 `
 
 const AddPost = () => {
+  const [post, setPost] = useState({title: '', text: '', imgUrl: ''})
+  const router = useRouter()
+
+  const addPost = async (e) => {
+    e.preventDefault()
+    await PostService.addNewPost(post.title, post.text, post.imgUrl)
+    await router.push('/')
+  }
+
   return (
     <MainContainer title="Создание поста">
       <Link href={'/'}>
@@ -55,17 +67,30 @@ const AddPost = () => {
         <Form>
           <FormField>
             <FieldText>Название статьи:</FieldText>
-            <AppInput type="text" required/>
+            <AppInput
+              onChange={(e) => setPost(prev => ({...prev, title: e.target.value}))}
+              value={post.title}
+              type="text"
+              required/>
           </FormField>
           <FormField>
             <FieldText>Текст статьи:</FieldText>
-            <FormTextArea/>
+            <FormTextArea
+              onChange={(e) => setPost(prev => ({...prev, text: e.target.value}))}
+              value={post.text}
+            />
           </FormField>
           <FormField>
             <FieldText>URL картинки:</FieldText>
-            <AppInput type="url"/>
+            <AppInput
+              onChange={(e) => setPost(prev => ({...prev, imgUrl: e.target.value}))}
+              value={post.imgUrl}
+              type="url"/>
           </FormField>
-          <AppButton style={{alignSelf: 'center'}}>Добавить</AppButton>
+          <AppButton
+            style={{alignSelf: 'center'}}
+            onClick={addPost}
+          >Добавить</AppButton>
         </Form>
       </FormWrapper>
     </MainContainer>
